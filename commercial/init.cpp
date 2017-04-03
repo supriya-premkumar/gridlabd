@@ -9,6 +9,7 @@
 
 #include "office.h"
 #include "multizone.h"
+#include "ceus.h"
 
 EXPORT CLASS *init(CALLBACKS *fntable, MODULE *module, int argc, char *argv[])
 {
@@ -25,7 +26,8 @@ EXPORT CLASS *init(CALLBACKS *fntable, MODULE *module, int argc, char *argv[])
 	gl_global_create("commercial::warn_high_temp",PT_double,&office::warn_high_temp,NULL);
 
 	new office(module);
-	new multizone(module); 
+	new multizone(module);
+	new ceus(module);
 
 	/* always return the first class registered */
 	return office::oclass;

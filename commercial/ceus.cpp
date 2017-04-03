@@ -103,6 +103,7 @@ int ceus::init(OBJECT *parent)
 
 TIMESTAMP ceus::precommit(TIMESTAMP t1)
 {
+	// TODO
 	return TS_NEVER;
 }
 
@@ -134,9 +135,7 @@ bool ceus::load_datafile(const char *pathname)
 		line[len]='\0'; // truncate data
 		gl_debug("%s(%d): input len=%d; line=[%-*.*s]",pathname,linenum,len,len,len,line);
 		if ( strcmp(line,"")==0 )
-		{
-			// TODO
-		}
+			continue;
 		IFTOKEN("CLASS")
 		{
 			char name[100];
