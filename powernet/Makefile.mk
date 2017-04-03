@@ -4,7 +4,7 @@
 
 pkglib_LTLIBRARIES += powernet/powernet.la
 
-powernet_powernet_la_CPPFLAGS =
+powernet_powernet_la_CPPFLAGS = -I/usr/local/include
 powernet_powernet_la_CPPFLAGS += $(AM_CPPFLAGS)
 
 powernet_powernet_la_LDFLAGS =

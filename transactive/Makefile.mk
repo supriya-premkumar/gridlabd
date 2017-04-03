@@ -4,7 +4,7 @@
 
 pkglib_LTLIBRARIES += transactive/transactive.la
 
-transactive_transactive_la_CPPFLAGS =
+transactive_transactive_la_CPPFLAGS = -I/usr/local/include
 transactive_transactive_la_CPPFLAGS += $(AM_CPPFLAGS)
 
 transactive_transactive_la_LDFLAGS =
