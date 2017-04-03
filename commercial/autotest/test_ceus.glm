@@ -1,0 +1,20 @@
+clock {
+	timezone "US/CA/Los Angeles";
+	starttime '2017-01-01 00:00:00';
+	stoptime '2018-01-01 00:00:00';
+}
+module climate;
+object climate {
+	name bakersfield;
+	tmyfile "CA-Bakersfield_Meadows_Field.tmy3";
+}
+object climate {
+	name bakersfield2;
+	tmyfile "CA-Bakersfield_Meadows_Field.tmy3";
+}
+
+module commercial;
+object ceus {
+	weather bakersfield;
+	datafile "ceus.csv";
+}
