@@ -986,8 +986,13 @@ inline char bitof(unsigned int64 x,/**< bit pattern to scan */
  **/
 inline char* gl_name(OBJECT *my, char *buffer, size_t size)
 {
-	char temp[256];
-	if(my == NULL || buffer == NULL) return NULL;
+	static char temp[256];
+	if ( my == NULL ) return NULL;
+	if ( buffer==NULL )
+	{
+		buffer = temp;
+		size = sizeof(temp);
+	}
 	if (my->name==NULL)
 		sprintf(temp,"%s:%d", my->oclass->name, my->id);
 	else
@@ -1975,7 +1980,7 @@ public: // iterators
 
 public: // exceptions
 	inline void exception(const char *msg, ...) { static char buf[1024]; va_list ptr; va_start(ptr,msg); vsprintf(buf+sprintf(buf,"%s: ",get_name()),msg,ptr); va_end(ptr); throw (const char*)buf;};
-	inline void error(const char *msg, ...) { static char buf[1024]; if ( get_flags(OF_QUIET) ) return; va_list ptr; va_start(ptr,msg); vsprintf(buf+sprintf(buf,"%s: ",get_name()),msg,ptr); va_end(ptr); gl_error("%s",buf);};
+	inline void error(const char *msg, ...) { static char buf[1024]; /* TODO (DPC) this doesn't seem to work right: if ( get_flags(OF_QUIET) ) return; */ va_list ptr; va_start(ptr,msg); vsprintf(buf+sprintf(buf,"%s: ",get_name()),msg,ptr); va_end(ptr); gl_error("%s",buf);};
 	inline void warning(const char *msg, ...) { static char buf[1024]; if ( !get_flags(OF_WARNING) ) return; va_list ptr; va_start(ptr,msg); vsprintf(buf+sprintf(buf,"%s: ",get_name()),msg,ptr); va_end(ptr); gl_warning("%s",buf);};
 	inline void verbose(const char *msg, ...) { static char buf[1024]; if ( !get_flags(OF_VERBOSE) ) return; va_list ptr; va_start(ptr,msg); vsprintf(buf+sprintf(buf,"%s: ",get_name()),msg,ptr); va_end(ptr); gl_verbose("%s",buf);};
 	inline void debug(const char *msg, ...) { static char buf[1024]; if ( !get_flags(OF_DEBUG) ) return; va_list ptr; va_start(ptr,msg); vsprintf(buf+sprintf(buf,"%s: ",get_name()),msg,ptr); va_end(ptr); gl_debug("%s",buf);};};
