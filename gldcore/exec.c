@@ -625,7 +625,7 @@ static int init_by_deferral_retry(OBJECT **def_array, int def_ct)
 {
 	OBJECT *obj;
 	int ct = 0, i = 0, obj_rv = 0;
-	OBJECT **next_arr = (OBJECT **)malloc(def_ct * sizeof(OBJECT *)), **tarray = 0;
+	OBJECT **next_arr = (OBJECT **)malloc(def_ct * sizeof(OBJECT *));
 	int rv = SUCCESS;
 	char b[64];
 	int retry = 1, tries = 0;
@@ -644,6 +644,8 @@ static int init_by_deferral_retry(OBJECT **def_array, int def_ct)
 		}
 		memset(next_arr, 0, def_ct * sizeof(OBJECT *));
 		// initialize each object in def_array
+		retry = 0;
+		ct = 0;
 		for (i = 0; i < def_ct; ++i)
 		{
 			obj = def_array[i];
@@ -658,13 +660,13 @@ static int init_by_deferral_retry(OBJECT **def_array, int def_ct)
 				case OI_DONE:
 					wlock(&obj->lock);
 					obj->flags |= OF_INIT;
-					obj->flags &= (~OF_DEFERRED);
+					obj->flags -= (~OF_DEFERRED);
 					wunlock(&obj->lock);
 					break;
 				case OI_WAIT:
-					output_debug("object %s deferred initialization", object_name(obj,b,63));
-					next_arr[ct] = obj;
-					++ct;
+					output_debug("object %s initialization deferred again", object_name(obj,b,63));
+					next_arr[ct++] = obj;
+					retry = 1;
 					break;
 				// no default
 			}
@@ -687,11 +689,10 @@ static int init_by_deferral_retry(OBJECT **def_array, int def_ct)
 		} else {
 			++tries;
 			retry = 1;
-			tarray = next_arr;
-			next_arr = def_array;
-			def_array = tarray;
+			free(def_array);
+			def_array = next_arr;
+			next_arr = (OBJECT **)malloc(def_ct * sizeof(OBJECT *));
 			def_ct = ct;
-			// three-point turn to swap the 'next' and the 'old' arrays, memset 0'ing at the top.
 		}
 	}
 
@@ -713,17 +714,19 @@ static int init_by_deferral()
 		obj_rv = object_init(obj);
 		switch (obj_rv)
 		{
-			case 0:
+			case OI_FAIL:
 				rv = FAILED;
 				memset(b, 0, 64);
 				output_error("init_by_deferral(): object %s initialization failed", object_name(obj, b, 63));
 				break;
-			case 1:
+			case OI_DONE:
+				output_debug("init_by_deferral(): object %s initialization done", object_name(obj, b, 63));
 				wlock(&obj->lock);
 				obj->flags |= OF_INIT;
 				wunlock(&obj->lock);
 				break;
-			case 2:
+			case OI_WAIT:
+				output_debug("init_by_deferral(): object %s initialization deferred", object_name(obj, b, 63));
 				def_array[def_ct] = obj;
 				++def_ct;
 				wlock(&obj->lock);
@@ -747,12 +750,8 @@ static int init_by_deferral()
 	{
 		rv = init_by_deferral_retry(def_array, def_ct);
 		if (rv == FAILED) // got hung up retrying
-		{ 
-				free(def_array);
-				return FAILED;
-		}
+			return FAILED;
 	}
-	free(def_array);
 
 	obj = object_get_first();
 	while (obj != 0)
