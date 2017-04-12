@@ -94,6 +94,7 @@
 #include "object.h"
 #include "find.h"
 #include "random.h"
+#include "exec.h"
 #define STREAM_MODULE
 #include "stream.h"
 
@@ -1918,7 +1919,7 @@ public: // header read accessors (no locking)
 	inline double get_longitude(void) { return my()->longitude; };
 	inline TIMESTAMP get_in_svc(void) { return my()->in_svc; };
 	inline TIMESTAMP get_out_svc(void) { return my()->out_svc; };
-	inline const char* get_name(void) { static char _name[sizeof(CLASS)+16]; return my()->name?my()->name:(sprintf(_name,"%s:%d",my()->oclass->name,my()->id),_name); };
+	inline const char* get_name(void) { static char _name[sizeof(CLASSNAME)+16]; return my()->name?my()->name:(sprintf(_name,"%s:%d",my()->oclass->name,my()->id),_name); };
 	inline NAMESPACE* get_space(void) { return my()->space; };
 	inline unsigned int get_lock(void) { return my()->lock; };
 	inline unsigned int get_rng_state(void) { return my()->rng_state; };
@@ -2117,6 +2118,17 @@ public: // special operations
 	template <class T> inline void setp(T &value, gld_wlock&) { *(T*)get_addr()=value; };
 	inline void setp(enumeration value) { ::wlock(&obj->lock); *(enumeration*)get_addr()=value; ::wunlock(&obj->lock); };
 	inline void setp(set value) { ::wlock(&obj->lock); *(set*)get_addr()=value; ::wunlock(&obj->lock); };
+    inline size_t notify(const char *fmt,...)
+    {
+            if ( pstruct.prop->notify==NULL )
+                    exception("property '%s.%s' does not have a notify handler",pstruct.prop->oclass->name,pstruct.prop->name);
+            static char buf[1024];
+            va_list ptr;
+            va_start(ptr,fmt);
+            size_t len = vsprintf(buf,fmt,ptr);
+            va_end(ptr);
+            return pstruct.prop->notify((void*)obj,buf)>0 ? len : 0;
+    };
 	inline gld_keyword* find_keyword(unsigned long value) { return get_first_keyword()->find(value); };
 	inline gld_keyword* find_keyword(const char *name) { return get_first_keyword()->find(name); };
 	inline bool compare(char *op, char *a, char *b=NULL, char *p=NULL) 
@@ -2442,6 +2454,23 @@ CDECL int dllkill() { do_kill(NULL); }
 			} else return 0; } \
 			T_CATCHALL(X,method); }
 		#define EXPORT_METHOD(X,N) EXPORT_METHOD_C(X,X,N)
+
+#define EXPORT_IMPLEMENT(C) EXPORT_CREATE(C); EXPORT_INIT(C); EXPORT_ISA(C); CLASS *C::oclass=NULL; C *C::defaults=NULL;
+
+#define DECL_IMPLEMENT(C) C(MODULE *module); static CLASS *oclass; static C *defaults; int create(void); int init(OBJECT *parent); int isa(const char *name);
+#define DECL_PRECOMMIT int precommit(TIMESTAMP t1)
+#define DECL_COMMIT TIMESTAMP commit(TIMESTAMP t1, TIMESTAMP t2)
+#define DECL_SYNC TIMESTAMP presync(TIMESTAMP t1); TIMESTAMP sync(TIMESTAMP t1); TIMESTAMP postsync(TIMESTAMP t1);
+#define DECL_NOTIFY(P) int notify_##P(const char *value)
+#define DECL_FINALIZE void finalize(void)
+
+inline bool gl_isa(CLASS *oclass,const char *type)
+{
+        return oclass==NULL ? false : strcmp(oclass->name,type)==0 || gl_isa(oclass->parent,type)==0;
+}
+#define IMPLEMENT_ISA(C) int C::isa(const char *type) { return gl_isa(oclass,type); }
+#define IMPLEMENT_NUL(C,F,R) TIMESTAMP C::F(TIMESTAMP t1) { return R; };
+
 #endif
 
 /****************************************

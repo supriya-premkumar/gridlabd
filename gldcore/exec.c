@@ -650,18 +650,19 @@ static int init_by_deferral_retry(OBJECT **def_array, int def_ct)
 			obj_rv = object_init(obj);
 			switch (obj_rv)
 			{
-				case 0:
+				case OI_FAIL:
 					rv = FAILED;
 					memset(b, 0, 64);
 					output_error("init_by_deferral_retry(): object %s initialization failed", object_name(obj, b, 63));
 					break;
-				case 1:
+				case OI_DONE:
 					wlock(&obj->lock);
 					obj->flags |= OF_INIT;
-					obj->flags -= OF_DEFERRED;
+					obj->flags &= (~OF_DEFERRED);
 					wunlock(&obj->lock);
 					break;
-				case 2:
+				case OI_WAIT:
+					output_debug("object %s deferred initialization", object_name(obj,b,63));
 					next_arr[ct] = obj;
 					++ct;
 					break;
