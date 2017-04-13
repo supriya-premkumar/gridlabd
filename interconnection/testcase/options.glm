@@ -1,6 +1,6 @@
 #set kmlfile=test_wecc2024_case.kml
 module tape;
-module transactive {
+module interconnection {
 	verbose_options NONE;
 	allow_constraint_violations INTERTIE;
 	trace_messages NONE;

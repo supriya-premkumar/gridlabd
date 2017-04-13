@@ -91,7 +91,7 @@ bool solver::setup(void)
 
 		// build graph matrix A
 		gl_debug("creating matrix A for %d lines and %d nodes",n_lines,n_nodes);
-		A = mat(n_lines,n_nodes,fill::zeros);
+		A = mat(n_nodes,n_lines,fill::zeros);
 		for ( int m=0 ; m<n_lines ; m++ )
 		{
 			controlarea *fromarea = line[m]->get_from_area();
@@ -99,11 +99,12 @@ bool solver::setup(void)
 			size_t from = fromarea->get_node_id();
 			size_t to = toarea->get_node_id();
 			double loss = line[m]->get_loss();
-			A(m,from) = 1-loss;
-			A(m,to) = loss-1;
+			A(from,m) = 1-loss;
+			A(to,m) = loss-1;
 		}
+		A = pinv(A);
 		if ( verbose_options&VO_SOLVER )
-			A.print("A");
+			A.print("pinv(A)");
 		status = SS_READY;
 		gl_debug("solver is ready");
 		return true;
@@ -140,6 +141,8 @@ void solver::update_b(void)
 		/* TROUBLESHOOT
 		   TODO
 		*/
+	if ( verbose_options&VO_SOLVER )
+		b.print("b");
 }
 
 bool solver::update_x(void)
@@ -193,11 +196,9 @@ bool solver::solve_unconstrained(double dt)
 	update_b();
 
 	// solve flow problem
-	if ( !arma::solve(x,A,b) )
-		throw "no solution exists";
-		/* TROUBLESHOOT
-		   TODO
-		*/
+	x = A*b;
+	if ( verbose_options&VO_SOLVER )
+		x.print("x");
 
 	bool limit_exceeded = update_x();
 
