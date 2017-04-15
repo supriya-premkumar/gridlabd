@@ -3,7 +3,7 @@
 module interconnection {
 	// solver_check "solver_check.m"; // dumps solver check script for matlab
 	frequency_bounds HARD;
-	trace_message NONE; // INTERCONNECTION|CONTROLAREA|ALL
+	trace_messages NONE; // INTERCONNECTION|CONTROLAREA|ALL
 }
 module tape;
 #set suppress_repeat_messages=FALSE

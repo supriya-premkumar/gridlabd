@@ -108,6 +108,14 @@ int intertie::init(OBJECT *parent)
 		   TODO
 		*/
 
+#ifdef NO_LOSSES
+	if ( loss != 0.0 )
+	{
+		warning("non-zero losses not supported yet");
+		loss = 0;
+	}
+#endif
+
 	return 1;
 }
 
@@ -127,7 +135,7 @@ TIMESTAMP intertie::presync(TIMESTAMP t1)
 
 TIMESTAMP intertie::sync(TIMESTAMP t1)
 {
-	losses = abs(flow)*loss;
+	losses = fabs(flow)*loss;
 	if ( verbose_options&VO_INTERTIE )
 	{
 		fprintf(stderr,"INTERTIE       : %s at %s\n", get_name(),(const char *)gld_clock().get_string());
@@ -139,8 +147,8 @@ TIMESTAMP intertie::sync(TIMESTAMP t1)
 				fprintf(stderr,"INTERTIE       :   direction........... %s->%s\n", from->name,to->name);
 			else
 				fprintf(stderr,"INTERTIE       :   direction........... %s->%s\n", to->name,from->name);
-			fprintf(stderr,"INTERTIE       :   flow................ %8.3f (%5.1f%%) %s\n", abs(flow),abs(flow)/capacity*100, capacity>0&&abs(flow)>capacity ? "!!!":"   ");
-			fprintf(stderr,"INTERTIE       :   losses.............. %8.3f (%5.1f%%)\n", losses,losses/abs(flow)*100);
+			fprintf(stderr,"INTERTIE       :   flow................ %8.3f (%5.1f%%) %s\n", fabs(flow),fabs(flow)/capacity*100, capacity>0&&fabs(flow)>capacity ? "!!!":"   ");
+			fprintf(stderr,"INTERTIE       :   losses.............. %8.3f (%5.1f%%)\n", losses,losses/fabs(flow)*100);
 		}
 	}
 

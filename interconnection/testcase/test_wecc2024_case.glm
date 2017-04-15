@@ -2,7 +2,8 @@
 
 #include "options.glm"
 
-script on_term start "test_wecc2024_case.kml";
+#set kmlfile=${modelname/.glm/.kml}
+script on_term open "${modelname/.glm/.kml}";
 
 clock {
 	timezone PST+8PDT;
@@ -14,8 +15,8 @@ object interconnection {
     name WECC2024;
     initialize STEADY;
     initial_balancing_unit WALC_G;
-    latitude 40.7714N;
-    longitude 111.9025W;
+    latitude 40N46.0;
+    longitude 111W54.0;
     damping 1.0;
     frequency 60;
 };

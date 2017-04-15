@@ -54,13 +54,8 @@ int interconnection::init(OBJECT *parent)
 	// check controlarea list
 	if ( n_controlarea==0 ) 
 	{
-		if ( init_count++<2 )
-			return 2; // defer until interties and control areas are registered
-		else
-			warning("interconnection with no control area");
-			/* TROUBLESHOOT
-			   TODO
-			*/
+		verbose("deferring initialization until control areas are registered");
+		return OI_WAIT; // defer until interties and control areas are registered
 	}
 
 
@@ -70,11 +65,16 @@ int interconnection::init(OBJECT *parent)
 		/* TROUBLESHOOT
 		   TODO
 		*/
-	if ( damping<0 ) 
-		exception("negative damping is not allowed");
+
+	// check damping ratio
+	if ( damping<0 )
+	{
+		error("negative damping is not allowed");
 		/* TROUBLESHOOT
 		   TODO
 		*/
+		return OI_FAIL;
+	}
 
 	// build flow solver
 	if ( n_intertie>0 )
@@ -89,7 +89,10 @@ int interconnection::init(OBJECT *parent)
 
 		// check flow solver, setup and solve if ok
 		if ( !engine->setup() || !engine->is_used() || !engine->is_ready() ) 
-			exception("solver is not ready");
+		{
+			error("solver is not ready");
+			return OI_FAIL;
+		}
 
 		last_solution_time = gl_globalclock;
 		solve_powerflow();
@@ -103,9 +106,12 @@ int interconnection::init(OBJECT *parent)
 			return init_transient(); // done
 	}
 	else if ( n_controlarea>1 )
-		exception("system has more than one controlarea but no interties"); 
-	else
-		return 1;
+	{
+		error("system has more than one controlarea but no interties");
+		return OI_FAIL;
+	}
+	verbose("initializatio ok");
+	return OI_DONE;
 }
 int interconnection::init_transient()
 {
@@ -231,7 +237,7 @@ TIMESTAMP interconnection::postsync(TIMESTAMP t1)
 		fprintf(stderr,"INTERCONNECTION:    total demand........ %8.3f\n", demand);
 		fprintf(stderr,"INTERCONNECTION:    total losses........ %8.3f\n", losses);
 		fprintf(stderr,"INTERCONNECTION:    total imbalance..... %8.3f (%.1f%%)\n", imbalance,imbalance/supply*100);
-		fprintf(stderr,"INTERCONNECTION:    system frequency.... %8.3f (dt/dt=%.1f)\n", frequency,df);
+		fprintf(stderr,"INTERCONNECTION:    system frequency.... %8.3f (df/dt=%.1f)\n", frequency,df);
 		fprintf(stderr,"INTERCONNECTION:    steady until........ %s [dt<%.1fs]\n", (const char*)gld_clock(t2).get_string(),dt1);
 	}
 
@@ -246,6 +252,16 @@ TIMESTAMP interconnection::postsync(TIMESTAMP t1)
 
 TIMESTAMP interconnection::commit(TIMESTAMP t1, TIMESTAMP t2)
 {
+	if ( frequency<0 )
+	{
+		error("frequency is zero");
+		return TS_INVALID;
+	}
+	else if ( !finite(frequency) )
+	{
+		error("frequency is infinite");
+		return TS_INVALID;
+	}
 	bool out_of_bound = frequency<minimum_frequency || frequency>maximum_frequency;
 	if ( !out_of_bound ) return TS_NEVER;
 	switch ( frequency_bounds ) {
@@ -307,6 +323,7 @@ int interconnection::notify_update(const char *message)
 			/* TROUBLESHOOT
 			   TODO
 			*/
+		verbose("intertie %s registered ok", (const char*)line->get_name());
 		n_intertie++;
 		return 1;
 	}
@@ -316,11 +333,12 @@ int interconnection::notify_update(const char *message)
 	{
 		controlarea_list = add_object(controlarea_list,obj);
 		gld_object *area = get_object(obj);
-		if ( !area->isa("controlarea") ) 
+		if ( !area->isa("controlarea") )
 			exception("attempt by non-controlarea object to register with interconnection as a controlarea");
 			/* TROUBLESHOOT
 			   TODO
 			*/
+		verbose("control area %s registered ok", (const char*)area->get_name());
 		n_controlarea++;
 		return 1;
 	}
@@ -364,7 +382,8 @@ int interconnection::kmldump(int (*stream)(const char*, ...))
 	stream("    </TABLE>]]></description>\n");
 	stream("  <styleUrl>#%s_mark_%s</styleUrl>\n",my()->oclass->name, (const char*)get_status_string());
 	stream("  <Point>\n");
-	stream("    <coordinates>%f,%f</coordinates>\n", get_longitude(), get_latitude());
+	stream("    <altitudeMode>relative</altitudeMode>\n");
+	stream("    <coordinates>%f,%f,100</coordinates>\n", get_longitude(), get_latitude());
 	stream("  </Point>\n");
 	stream("</Placemark>\n");
 

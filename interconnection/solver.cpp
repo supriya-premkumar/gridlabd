@@ -98,10 +98,11 @@ bool solver::setup(void)
 			controlarea *toarea = line[m]->get_to_area();
 			size_t from = fromarea->get_node_id();
 			size_t to = toarea->get_node_id();
-			double loss = line[m]->get_loss();
-			A(from,m) = 1-loss;
-			A(to,m) = loss-1;
+			A(from,m) = 1;
+			A(to,m) = -1;
 		}
+		if ( verbose_options&VO_SOLVER )
+			A.print("A");
 		A = pinv(A);
 		if ( verbose_options&VO_SOLVER )
 			A.print("pinv(A)");

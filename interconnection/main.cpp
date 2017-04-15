@@ -164,6 +164,20 @@ EXPORT int kmldump(int (*stream)(const char *,...), OBJECT *obj)
 		ADDMARK("intertie_mark_OVERLIMIT");
 		ADDMARK("intertie_mark_NOFLOW");
 
+		ADDMARK("generator_mark_OFFLINE");
+		ADDMARK("generator_mark_MINIMUM");
+		ADDMARK("generator_mark_RUNNING");
+		ADDMARK("generator_mark_MAXIMUM");
+		ADDMARK("generator_mark_OVERCAP");
+
+		ADDMARK("load_mark_OFFLINE");
+		ADDMARK("load_mark_ONLINE");
+		ADDMARK("load_mark_CONSTRAINED");
+		ADDMARK("load_mark_OVERLOAD");
+		ADDMARK("load_mark_RESTORING");
+		ADDMARK("load_mark_SHEDDING");
+		ADDMARK("load_mark_UNDERLOAD");
+
 		ADDPATH("intertie_path_OFFLINE",0x7d000000,10); // black
 		ADDPATH("intertie_path_CONSTRAINED",0x7d00ffff,10); // yellow
 		ADDPATH("intertie_path_UNCONSTRAINED",0x7d00ff00,10); // green
@@ -174,10 +188,9 @@ EXPORT int kmldump(int (*stream)(const char *,...), OBJECT *obj)
 	}
 #define DOKML(CLASS)  if ( gl_object_isa(obj,#CLASS) ) return OBJECTDATA(obj,CLASS)->kmldump(stream);
 	DOKML(interconnection);
-	return 0;
-	DOKML(controlarea);
-	DOKML(intertie);
-	DOKML(load);
 	DOKML(generator);
+	DOKML(load);
+	//DOKML(controlarea);
+	//DOKML(intertie);
     return 0;
 }

@@ -46,7 +46,6 @@ private:
 	size_t n_intertie; ///< number of interties
 	OBJECTLIST *intertie_list; ///< list of interties
 	solver *engine; ///< solver engine
-	unsigned int init_count;
 	TIMESTAMP last_solution_time;
 public:
 	DECL_IMPLEMENT(interconnection);

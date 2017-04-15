@@ -51,7 +51,7 @@ typedef enum {
 	TMT_INTERCONNECTION = 0x0001, ///< interconnection messages traced
 	TMT_CONTROLAREA     = 0x0002, ///< controlarea messages traced
 	_TMT_LAST,
-	TMT_ALL				= 0xffff, ///< all messages traced
+	TMT_ALL				= 0x0003, ///< all messages traced
 } TRANSACTIVEMESSAGETYPE; ///< message trace enumeration
 
 void trace_message(TRANSACTIVEMESSAGETYPE type, const char *msg);

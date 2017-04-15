@@ -3,6 +3,11 @@
 // Matpower case4gs
 //
 
+clock {
+	starttime '2001-01-01 00:00:00';
+	stoptime '2001-01-01 01:00:00';
+}
+
 module interconnection {
 	verbose_options NONE;
 	allow_constraint_violations INTERTIE;
@@ -10,12 +15,21 @@ module interconnection {
 	frequency_bounds HARD;
 };
 
+module tape;
+
 object interconnection {
 	name case4gs;
 	initialize STEADY;
 	initial_balancing_unit G4;
 	latitude 52N;
 	longitude 120W;
+
+	object recorder {
+		file test_case4gs.csv;
+		property frequency,inertia,capacity,damping,supply,demand,losses,imbalance,status;
+		limit 900;
+		interval 4s;
+	};
 
 	//////////////////////////////////////////////////////////////////////////////
 	object controlarea {
@@ -69,10 +83,12 @@ object interconnection {
 		};
 		object generator {
 			name G4;
-			capacity 500;
+			capacity 600;
 			actual 509.7;
 			inertia 5000;
-			control_gain 1.0;
+			control_gain 1;
+			control_flags DROOP;
+			frequency_deadband 0.001;
 		};
 	};
 
@@ -82,29 +98,34 @@ object interconnection {
 		to B2;
 		capacity 5000;
 		loss 0.0018;
+		status UNCONSTRAINED;
 	};
 	object intertie {
 		from B1;
 		to B3;
 		capacity 5000;
 		loss 0.0087;
+		status UNCONSTRAINED;
 	};
 	object intertie {
 		from B2;
 		to B4;
 		capacity 5000;
 		loss 0.0173;
+		status UNCONSTRAINED;
 	};
 	object intertie {
 		from B3;
 		to B4;
 		capacity 5000;
 		loss 0.0242;
+		status UNCONSTRAINED;
 	};
 	object intertie {
 		from B1;
 		to B4;
 		capacity 5000;
 		loss 0.0154;
+		status UNCONSTRAINED;
 	};
 }
