@@ -3,6 +3,19 @@
 #include "options.glm"
 
 #set kmlfile=${modelname/.glm/.kml}
+
+// this will automatically call sync_script if it is found
+#ifexist sync_script
+#option server
+#set server_portnum=6267
+script on_sync ./sync_script;
+#endif
+
+// this will automaticall call init_script if it is found
+#ifexist init_script
+script on_init ./init_script;
+#endif
+
 script on_term open "${modelname/.glm/.kml}";
 
 clock {
