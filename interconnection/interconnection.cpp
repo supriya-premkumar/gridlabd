@@ -58,7 +58,6 @@ int interconnection::init(OBJECT *parent)
 		return OI_WAIT; // defer until interties and control areas are registered
 	}
 
-
 	// check frequency and damping values
 	if ( frequency!=nominal_frequency ) 
 		warning("initial off-nominal frequency");
@@ -79,13 +78,25 @@ int interconnection::init(OBJECT *parent)
 	// build flow solver
 	if ( n_intertie>0 )
 	{
+		// build local indexes
+		area = (controlarea**)malloc(n_controlarea*sizeof(controlarea*));
+		line = (intertie**)malloc(n_intertie*sizeof(intertie*));
+
+		// create solver
 		engine = new solver;
 		engine->create(n_controlarea,n_intertie);
 		OBJECTLIST *item = NULL;
-		for ( item=controlarea_list ; item!=NULL ; item=item->next )
+		size_t n ;
+		for ( n=0, item=controlarea_list ; item!=NULL ; n++, item=item->next )
+		{
+			area[n] = (controlarea*)OBJECTDATA(item->obj,controlarea);
 			engine->add_node(item->obj);
-		for ( item=intertie_list ; item!=NULL ; item=item->next )
+		}
+		for ( n=0, item=intertie_list ; item!=NULL ; n++, item=item->next )
+		{
+			line[n] = (intertie*)OBJECTDATA(item->obj,intertie);
 			engine->add_line(item->obj);
+		}
 
 		// check flow solver, setup and solve if ok
 		if ( !engine->setup() || !engine->is_used() || !engine->is_ready() ) 
@@ -93,7 +104,6 @@ int interconnection::init(OBJECT *parent)
 			error("solver is not ready");
 			return OI_FAIL;
 		}
-
 		last_solution_time = gl_globalclock;
 		solve_powerflow();
 
@@ -110,7 +120,7 @@ int interconnection::init(OBJECT *parent)
 		error("system has more than one controlarea but no interties");
 		return OI_FAIL;
 	}
-	verbose("initializatio ok");
+	verbose("initialization ok");
 	return OI_DONE;
 }
 int interconnection::init_transient()
@@ -226,18 +236,19 @@ TIMESTAMP interconnection::postsync(TIMESTAMP t1)
 	// compute frequency change [Source: Kunder (1994) p.135]
 	if ( inertia<1e-9 ) return TS_NEVER;
 	double wr = frequency/nominal_frequency;
-	double df = 0.5 / (inertia*(wr*wr)) * ( imbalance - demand*damping*fr );
+	double df = 2 / (inertia*(wr*wr)) * ( imbalance - demand*damping*fr );
 	frequency = f0 + df*dt;
 	double dt1 = frequency_resolution/fabs(df);
 	TIMESTAMP t2 = ( dt1>(double)TS_NEVER ) ? TS_NEVER : ( t1 + (TIMESTAMP)(dt1<1.0?1.0:dt1) );
 	if ( verbose_options&VO_INTERCONNECTION )
 	{
-		fprintf(stderr,"INTERCONNECTION: %s at %s\n", get_name(),(const char *)gld_clock().get_string());
+		fprintf(stderr,"INTERCONNECTION: status of '%s' at '%s'\n", get_name(),(const char *)gld_clock().get_string());
 		fprintf(stderr,"INTERCONNECTION:    total supply........ %8.3f\n", supply);
 		fprintf(stderr,"INTERCONNECTION:    total demand........ %8.3f\n", demand);
 		fprintf(stderr,"INTERCONNECTION:    total losses........ %8.3f\n", losses);
-		fprintf(stderr,"INTERCONNECTION:    total imbalance..... %8.3f (%.1f%%)\n", imbalance,imbalance/supply*100);
-		fprintf(stderr,"INTERCONNECTION:    system frequency.... %8.3f (df/dt=%.1f)\n", frequency,df);
+		fprintf(stderr,"INTERCONNECTION:    total imbalance..... %8.3f (%.4f%%)\n", imbalance,imbalance/supply*100);
+		fprintf(stderr,"INTERCONNECTION:    total inertia....... %8.3f\n", inertia);
+		fprintf(stderr,"INTERCONNECTION:    system frequency.... %8.3f (df/dt=%.6f)\n", frequency,df);
 		fprintf(stderr,"INTERCONNECTION:    steady until........ %s [dt<%.1fs]\n", (const char*)gld_clock(t2).get_string(),dt1);
 	}
 

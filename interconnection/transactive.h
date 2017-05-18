@@ -10,6 +10,37 @@
 
 #include "gridlabd.h"
 
+#include <string>
+#include <list>
+
+#ifndef _DEBUG
+#define ARMA_DONT_PRINT_ERRORS
+#endif
+#include <armadillo>
+
+using namespace std;
+using namespace arma;
+
+#include <math.h>
+
+// some additional armadillo stuff we need
+inline colvec join_cols(colvec a, double b) { return join_cols(a,as_scalar(b)); }
+inline colvec join_cols(double a, colvec b) { return join_cols(as_scalar(a),b); }
+inline colvec join_cols(double a, double b) { return join_cols(as_scalar(a),as_scalar(b)); }
+inline rowvec join_rows(rowvec a, double b) { return join_rows(a,as_scalar(b)); }
+inline rowvec join_rows(double a, rowvec b) { return join_rows(as_scalar(a),b); }
+inline rowvec join_rows(double a, double b) { return join_rows(as_scalar(a),as_scalar(b)); }
+inline uvec setdiff(uvec a, uvec b) {
+	uvec c;
+	for ( uvec::iterator i = a.begin(); i != a.end() ; i++ )
+	{
+		uvec j = find(b,*i);
+		if ( j.is_empty() )
+			c << *i;
+	}
+	return c;
+}
+
 // verbose options
 #define VO_NONE            0x0000 ///< enable no verbose output
 #define VO_SOLVER          0x0001 ///< enable solver verbose output
@@ -18,6 +49,7 @@
 #define VO_INTERTIE        0x0008 ///< enable intertie verbose output
 #define VO_GENERATOR       0x0010 ///< enable generator verbose output
 #define VO_LOAD            0x0020 ///< enable load verbose output
+#define VO_SCHEDULER       0x0040 ///< enable scheduler verbose output
 #define VO_ALL             0xffff ///< enable all verbose output
 
 // constraint violations

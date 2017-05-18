@@ -26,6 +26,8 @@ public:
 	GL_ATOMIC(double,schedule); ///< scheduled load power
 	GL_ATOMIC(double,actual); ///< actual load power
 	GL_ATOMIC(enumeration,status); /// generation status flags (LS_*)
+	GL_ATOMIC(double,fixed_price); ///< scheduling base price
+	GL_ATOMIC(double,marginal_price); ///< scheduling marginal price
 	GL_ATOMIC(set,control_flags); ///< load control flags (LCF_*)
 	GL_ATOMIC(double,dr_fraction); ///< load fraction under dr control
 	GL_ATOMIC(double_array,ufls); ///< underfrequency load shedding matrix (c1: freq; c2: trip fraction)

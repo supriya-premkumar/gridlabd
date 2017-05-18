@@ -13,7 +13,9 @@ intertie::intertie(MODULE *module)
 	if ( gl_publish_variable(oclass,
 		PT_object,"from",get_from_offset(),PT_DESCRIPTION,"control area from which power flows",
 		PT_object,"to",get_to_offset(),PT_DESCRIPTION,"control area to which power flows",
-		PT_double,"capacity[MW]",get_capacity_offset(),PT_DESCRIPTION,"intertie power capacity",
+		PT_double,"capacity[MW]",get_capacity_offset(),PT_DESCRIPTION,"intertie power capacity (both directions)",
+		PT_double,"max_flow[MW]",get_max_flow_offset(),PT_DESCRIPTION,"intertie power capacity (forward direction is positive)",
+		PT_double,"min_flow[MW]",get_min_flow_offset(),PT_DESCRIPTION,"intertie power capacity (reverse direction is negative)",
 		PT_double,"flow[MW]",get_flow_offset(),PT_DESCRIPTION,"intertie power flow",
 		PT_double,"loss[pu]",get_loss_offset(),PT_DESCRIPTION,"intertie power loss",
 		PT_double,"losses[MW]",get_losses_offset(),PT_ACCESS,PA_REFERENCE,PT_DESCRIPTION,"intertie power losses",
@@ -97,16 +99,18 @@ int intertie::init(OBJECT *parent)
 		/* TROUBLESHOOT
 		   TODO
 		*/
-	if ( capacity==0 && status!=TLS_OFFLINE )
-		warning("zero capacity intertie will behave as though status is OFFLINE");
+	if ( capacity>0 && min_flow==max_flow && max_flow==0 )
+	{
+		min_flow = -(max_flow = capacity);
+	}
+	else if ( min_flow>=max_flow )
+	{
+		error("min flow exceeds max flow");
 		/* TROUBLESHOOT
 		   TODO
 		*/
-	else if ( capacity!=0 && status==TLS_UNCONSTRAINED && !(allow_constraint_violation&CV_INTERTIE) )
-		warning("intertie constraint is ignored when status is UNCONSTRAINED");
-		/* TROUBLESHOOT
-		   TODO
-		*/
+		return 0;
+	}
 
 #ifdef NO_LOSSES
 	if ( loss != 0.0 )

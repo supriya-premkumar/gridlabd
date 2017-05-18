@@ -12,8 +12,10 @@ interconnection_interconnection_la_LIBADD =
 interconnection_interconnection_la_LIBADD += $(MATLAB_LIBS) 
 
 interconnection_interconnection_la_SOURCES =
-#interconnection_interconnection_la_SOURCES += interconnection/linalg.cpp
-#interconnection_interconnection_la_SOURCES += interconnection/linalg.h
+interconnection_interconnection_la_SOURCES += interconnection/gensolve.cpp
+interconnection_interconnection_la_SOURCES += interconnection/gensolve.h
+interconnection_interconnection_la_SOURCES += interconnection/supply.cpp
+interconnection_interconnection_la_SOURCES += interconnection/supply.h
 interconnection_interconnection_la_SOURCES += interconnection/solver.cpp
 interconnection_interconnection_la_SOURCES += interconnection/solver.h
 interconnection_interconnection_la_SOURCES += interconnection/weather.cpp

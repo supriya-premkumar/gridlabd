@@ -1,0 +1,21 @@
+#!/bin/bash
+
+if [ "$clock" == "2000-01-01 00:00:28 PST" ]; then
+	curl -s 'http://localhost:6267/raw/interconnection::verbose_options=INTERCONNECTION|SCHEDULER' > /dev/null
+	curl -s 'http://localhost:6267/raw/show_progress=0' > /dev/null
+fi
+if [ "$clock" == "2000-01-01 00:00:30 PST" ]; then
+	D=5000
+	G=$(curl -s 'http://localhost:6267/raw/SRP_G/actual')
+	H=$(dc -e "${G/ MW/} $D - p")
+	echo "WECC2024 $clock: Generator outage -- SRP_G drops $D MW from $G to $H MW"
+	curl -s "http://localhost:6267/raw/SRP_G/actual=$H MW"
+fi
+V=$(curl -s 'http://localhost:6267/raw/interconnection::verbose_options')
+if [ ! "$V" == "NONE" ]; then
+	echo ""
+	echo -n "$clock >>> "
+	while [ ! -z "$(read)" ]; do
+		echo "invalid command";
+	done
+fi

@@ -4,6 +4,9 @@
 #define _INTERCONNECTION_H
 
 #include "solver.h"
+#include "controlarea.h"
+#include "intertie.h"
+class scheduler;
 
 typedef enum {
 	ICS_OK=KC_GREEN,
@@ -43,10 +46,21 @@ private:
 	double fr; ///< relative frequency difference
 	size_t n_controlarea; ///< number of control areas
 	OBJECTLIST *controlarea_list; ///< list of controlareas
+	controlarea **area;
 	size_t n_intertie; ///< number of interties
 	OBJECTLIST *intertie_list; ///< list of interties
+	intertie **line;
 	solver *engine; ///< solver engine
 	TIMESTAMP last_solution_time;
+	scheduler *central_scheduler;
+public:
+	inline size_t get_nareas() { return n_controlarea; };
+	inline double get_nlines() { return n_intertie; };
+	inline controlarea* get_area(size_t n) { return area[n]; };
+	inline intertie* get_line(size_t n) { return line[n]; };
+public:
+	void set_scheduler(scheduler*p) { central_scheduler = p; };
+	scheduler* get_schedular(void) { return central_scheduler; };
 public:
 	DECL_IMPLEMENT(interconnection);
 	DECL_PRECOMMIT;

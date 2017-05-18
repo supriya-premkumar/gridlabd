@@ -1,0 +1,33 @@
+module interconnection;
+
+object interconnection {
+	name WECC;
+	initialize TRANSIENT;
+	object scheduler {
+		schedule_file interconnection_schedule.csv;
+		method STATIC;
+	};
+}
+
+#include using(NAME=AESO) "controlarea.glm"
+#include using(NAME=BCH) "controlarea.glm"
+#include using(NAME=PNW) "controlarea.glm"
+#include using(NAME=NWMT) "controlarea.glm"
+#include using(NAME=PAWY) "controlarea.glm"
+#include using(NAME=NCA) "controlarea.glm"
+#include using(NAME=SPPC) "controlarea.glm"
+#include using(NAME=ID) "controlarea.glm"
+#include using(NAME=UT) "controlarea.glm"
+#include using(NAME=CO) "controlarea.glm"
+#include using(NAME=LDWP) "controlarea.glm"
+#include using(NAME=NEVP) "controlarea.glm"
+#include using(NAME=PSCO) "controlarea.glm"
+#include using(NAME=SCA) "controlarea.glm"
+#include using(NAME=AZ) "controlarea.glm"
+#include using(NAME=CISD) "controlarea.glm"
+#include using(NAME=IID) "controlarea.glm"
+#include using(NAME=PNM) "controlarea.glm"
+#include using(NAME=CFE) "controlarea.glm"
+#include using(NAME=EPE) "controlarea.glm"
+
+#include "paths.glm"

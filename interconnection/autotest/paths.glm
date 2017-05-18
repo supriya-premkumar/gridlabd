@@ -1,0 +1,296 @@
+object intertie {
+	name "P01";
+	parent "WECC";
+	from "AESO";
+	to "BCH";
+	max_flow 1000 MW;
+	min_flow -1200 MW;
+}
+object intertie {
+	name "P03";
+	parent "WECC";
+	from "PNW";
+	to "BCH";
+	max_flow 3000 MW;
+	min_flow -3150 MW;
+}
+object intertie {
+	name "P08";
+	parent "WECC";
+	from "NWMT";
+	to "PNW";
+	max_flow 3000 MW;
+	min_flow -2150 MW;
+}
+object intertie {
+	name "P09";
+	parent "WECC";
+	from "NWMT";
+	to "CO";
+	max_flow 2573 MW;
+	min_flow -2573 MW;
+}
+object intertie {
+	name "P14";
+	parent "WECC";
+	from "ID";
+	to "PNW";
+	max_flow 3400 MW;
+	min_flow -2250 MW;
+}
+object intertie {
+	name "P16";
+	parent "WECC";
+	from "ID";
+	to "SPPC";
+	max_flow 500 MW;
+	min_flow -360 MW;
+}
+object intertie {
+	name "P18";
+	parent "WECC";
+	from "NWMT";
+	to "ID";
+	max_flow 337 MW;
+	min_flow -256 MW;
+}
+object intertie {
+	name "P20";
+	parent "WECC";
+	from "ID";
+	to "UT";
+	max_flow 2250 MW;
+	min_flow -2250 MW;
+}
+object intertie {
+	name "P22";
+	parent "WECC";
+	from "PNM";
+	to "AZ";
+	max_flow 2325 MW;
+	min_flow -2325 MW;
+}
+object intertie {
+	name "P24";
+	parent "WECC";
+	from "NCA";
+	to "SPPC";
+	max_flow 160 MW;
+	min_flow -150 MW;
+}
+object intertie {
+	name "P26";
+	parent "WECC";
+	from "NCA";
+	to "SCA";
+	max_flow 4000 MW;
+	min_flow -3000 MW;
+}
+object intertie {
+	name "P27";
+	parent "WECC";
+	from "UT";
+	to "LDWP";
+	max_flow 2400 MW;
+	min_flow -1400 MW;
+}
+object intertie {
+	name "P30";
+	parent "WECC";
+	from "UT";
+	to "PSCO";
+	max_flow 650 MW;
+	min_flow -650 MW;
+}
+object intertie {
+	name "P31";
+	parent "WECC";
+	from "PSCO";
+	to "PNM";
+	max_flow 690 MW;
+	min_flow -690 MW;
+}
+object intertie {
+	name "P32";
+	parent "WECC";
+	from "SPPC";
+	to "UT";
+	max_flow 440 MW;
+	min_flow -235 MW;
+}
+object intertie {
+	name "P35";
+	parent "WECC";
+	from "UT";
+	to "NEVP";
+	max_flow 600 MW;
+	min_flow -580 MW;
+}
+object intertie {
+	name "P36";
+	parent "WECC";
+	from "CO";
+	to "PSCO";
+	max_flow 1680 MW;
+	min_flow -1680 MW;
+}
+object intertie {
+	name "P42";
+	parent "WECC";
+	from "IID";
+	to "SCA";
+	max_flow 1500 MW;
+	min_flow -1500 MW;
+}
+object intertie {
+	name "P43";
+	parent "WECC";
+	from "LDWP";
+	to "SCA";
+	max_flow 4000 MW;
+	min_flow -4000 MW;
+}
+object intertie {
+	name "P44";
+	parent "WECC";
+	from "CISD";
+	to "SCA";
+	max_flow 2500 MW;
+	min_flow -2500 MW;
+}
+object intertie {
+	name "P45";
+	parent "WECC";
+	from "CISD";
+	to "CFE";
+	max_flow 400 MW;
+	min_flow -800 MW;
+}
+object intertie {
+	name "P46N";
+	parent "WECC";
+	from "NEVP";
+	to "LDWP";
+	max_flow 6000 MW;
+	min_flow -6000 MW;
+}
+object intertie {
+	name "P46S";
+	parent "WECC";
+	from "NEVP";
+	to "SCA";
+	max_flow 5000 MW;
+	min_flow -5000 MW;
+}
+object intertie {
+	name "P47";
+	parent "WECC";
+	from "EPE";
+	to "AZ";
+	max_flow 1048 MW;
+	min_flow -1048 MW;
+}
+object intertie {
+	name "P48";
+	parent "WECC";
+	from "EPE";
+	to "PNM";
+	max_flow 1970 MW;
+	min_flow -1970 MW;
+}
+object intertie {
+	name "P49";
+	parent "WECC";
+	from "AZ";
+	to "NEVP";
+	max_flow 10200 MW;
+	min_flow -10200 MW;
+}
+object intertie {
+	name "P59";
+	parent "WECC";
+	from "AZ";
+	to "SCA";
+	max_flow 218 MW;
+	min_flow -218 MW;
+}
+object intertie {
+	name "P65";
+	parent "WECC";
+	from "PNW";
+	to "LDWP";
+	max_flow 3220 MW;
+	min_flow -3100 MW;
+}
+object intertie {
+	name "P66";
+	parent "WECC";
+	from "PNW";
+	to "NCA";
+	max_flow 4800 MW;
+	min_flow -3675 MW;
+}
+object intertie {
+	name "P76";
+	parent "WECC";
+	from "PNW";
+	to "SPPC";
+	max_flow 300 MW;
+	min_flow -300 MW;
+}
+object intertie {
+	name "P78";
+	parent "WECC";
+	from "UT";
+	to "PNM";
+	max_flow 600 MW;
+	min_flow -600 MW;
+}
+object intertie {
+	name "P79";
+	parent "WECC";
+	from "AZ";
+	to "UT";
+	max_flow 265 MW;
+	min_flow -300 MW;
+}
+object intertie {
+	name "P80";
+	parent "WECC";
+	from "NWMT";
+	to "PAWY";
+	max_flow 600 MW;
+	min_flow -600 MW;
+}
+object intertie {
+	name "PP1";
+	parent "WECC";
+	from "PAWY";
+	to "UT";
+	max_flow 1700 MW;
+	min_flow -1700 MW;
+}
+object intertie {
+	name "PP2";
+	parent "WECC";
+	from "IID";
+	to "CISD";
+	max_flow 150 MW;
+	min_flow -150 MW;
+}
+object intertie {
+	name "PP3";
+	parent "WECC";
+	from "AZ";
+	to "CISD";
+	max_flow 1650 MW;
+	min_flow -1160 MW;
+}
+object intertie {
+	name "PP4";
+	parent "WECC";
+	from "AZ";
+	to "IID";
+	max_flow 260 MW;
+	min_flow -160 MW;
+}

@@ -65,6 +65,7 @@ int load::init(OBJECT *parent)
 	area = get_object(parent);
 	if ( !area->isa("controlarea") ) exception("parent must be an controlarea");
 	control = OBJECTDATA(parent,controlarea);
+	control->add_load(my());
 
 	// collect properties
 	update_area = gld_property(area,"update");

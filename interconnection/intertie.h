@@ -16,6 +16,8 @@ public:
 	GL_ATOMIC(object,from); ///< from area
 	GL_ATOMIC(object,to); ///< to area
 	GL_ATOMIC(double,capacity); ///< line capacity [MW]
+	GL_ATOMIC(double,min_flow); ///< maximum reverse line capacity [MW]
+	GL_ATOMIC(double,max_flow); ///< maximum forward line capacity [MW]
 	GL_ATOMIC(enumeration,status); ///< line status {OFFLINE, CONSTRAINED, UNCONSTRAINED}
 	GL_ATOMIC(double,flow); ///< line flow [MW]
 	GL_ATOMIC(double,loss); ///< line loss [pu]

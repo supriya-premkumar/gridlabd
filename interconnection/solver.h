@@ -3,6 +3,7 @@
 #ifndef _SOLVER_H
 #define _SOLVER_H
 
+#define ARMA_DONT_PRINT_ERRORS
 #include <armadillo>
 #include "transactive.h"
 

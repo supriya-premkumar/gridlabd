@@ -1,0 +1,8 @@
+
+object controlarea {
+	parent WECC;
+	name ${NAME};
+}
+object generator {
+	parent ${NAME};
+}

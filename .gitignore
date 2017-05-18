@@ -105,3 +105,12 @@ third_party/xerces*/*
 *.xcbkptlist
 .*.swp
 .DS_Store
+*.kml
+*.err
+*.wrn
+*.dbg
+*.pro
+*.inf
+*.out
+*.prg
+

@@ -1,27 +1,45 @@
 // generated automatically by update_glm on 22-Jun-2015 17:04:55
 
-#include "options.glm"
+#option version
+#set suppress_repeat_messages=false
+module tape;
+module interconnection {
+	verbose_options INTERCONNECTION|SCHEDULER|CONTROLAREA;
+	allow_constraint_violations INTERTIE;
+	trace_messages NONE;
+	frequency_bounds HARD;
+    frequency_resolution 0.00001 Hz;
+    droop_control 5%;
+    on_schedule_failure DUMP;
+};
 
-#set kmlfile=${modelname/.glm/.kml}
-
-// this will automatically call sync_script if it is found
-#ifexist sync_script
-#option server
-#set server_portnum=6267
-script on_sync ./sync_script;
-#endif
-
-// this will automaticall call init_script if it is found
+// this will automatically call init_script if it is found
 #ifexist init_script
 script on_init ./init_script;
 #endif
 
+// this will automatically call sync_script if it is found
+#ifexist sync_script
+#option server // assumes sync are using server to access data
+#set server_portnum=6267
+script export clock;
+script on_sync ./sync_script;
+#endif
+
+// this will automatically call term_script if it is found
+#ifexist term_script
+script on_term ./term_script
+#endif
+
+#set kmlfile=${modelname/.glm/.kml}
 script on_term open "${modelname/.glm/.kml}";
+
+#define AGC_GAIN=0.5
 
 clock {
 	timezone PST+8PDT;
 	starttime '2000-01-01 00:00:00 PST';
-	stoptime '2000-01-01 01:00:00 PST';
+	stoptime '2000-01-01 00:10:00 PST';
 }
 
 object interconnection {
@@ -32,6 +50,9 @@ object interconnection {
     longitude 111W54.0;
     damping 1.0;
     frequency 60;
+    object scheduler {
+    	method INTERNAL;
+    };
 };
 object controlarea:75 {
     name AESO;
@@ -64,7 +85,7 @@ object controlarea:75 {
         actual 10955.2 MW;
         inertia 109552 MJ;
         schedule 10955.2 MW;
-        control_gain 0.5;
+        control_gain ${AGC_GAIN};
         frequency_deadband 0.036 Hz;
         control_flags DROOP|AGC;
         object recorder {
@@ -111,7 +132,7 @@ object controlarea:76 {
         actual 2346.54 MW;
         inertia 23465.4 MJ;
         schedule 2346.54 MW;
-        control_gain 0.5;
+        control_gain ${AGC_GAIN};
         frequency_deadband 0.018 Hz;
         control_flags DROOP|AGC;
         object recorder {
@@ -158,7 +179,7 @@ object controlarea:77 {
         actual 6693.83 MW;
         inertia 66938.3 MJ;
         schedule 6693.83 MW;
-        control_gain 0.5;
+        control_gain ${AGC_GAIN};
         frequency_deadband 0.012 Hz;
         control_flags DROOP|AGC;
         object recorder {
@@ -205,7 +226,7 @@ object controlarea:79 {
         actual 4014.97 MW;
         inertia 40149.7 MJ;
         schedule 4014.97 MW;
-        control_gain 0.5;
+        control_gain ${AGC_GAIN};
         frequency_deadband 0.009 Hz;
         control_flags DROOP|AGC;
         object recorder {
@@ -252,7 +273,7 @@ object controlarea:80 {
         actual 7019.87 MW;
         inertia 70198.7 MJ;
         schedule 7019.87 MW;
-        control_gain 0.5;
+        control_gain ${AGC_GAIN};
         frequency_deadband 0.0072 Hz;
         control_flags DROOP|AGC;
         object recorder {
@@ -299,7 +320,7 @@ object controlarea:82 {
         actual 3423.1 MW;
         inertia 34231 MJ;
         schedule 3423.1 MW;
-        control_gain 0.5;
+        control_gain ${AGC_GAIN};
         frequency_deadband 0.006 Hz;
         control_flags DROOP|AGC;
         object recorder {
@@ -346,7 +367,7 @@ object controlarea:83 {
         actual 340.484 MW;
         inertia 3404.84 MJ;
         schedule 340.484 MW;
-        control_gain 0.5;
+        control_gain ${AGC_GAIN};
         frequency_deadband 0.00514286 Hz;
         control_flags DROOP|AGC;
         object recorder {
@@ -393,7 +414,7 @@ object controlarea:84 {
         actual 8142.89 MW;
         inertia 81428.9 MJ;
         schedule 8142.89 MW;
-        control_gain 0.5;
+        control_gain ${AGC_GAIN};
         frequency_deadband 0.0045 Hz;
         control_flags DROOP|AGC;
         object recorder {
@@ -440,7 +461,7 @@ object controlarea:85 {
         actual 12194.8 MW;
         inertia 121948 MJ;
         schedule 12194.8 MW;
-        control_gain 0.5;
+        control_gain ${AGC_GAIN};
         frequency_deadband 0.004 Hz;
         control_flags DROOP|AGC;
         object recorder {
@@ -487,7 +508,7 @@ object controlarea:86 {
         actual 23058.7 MW;
         inertia 230587 MJ;
         schedule 23058.7 MW;
-        control_gain 0.5;
+        control_gain ${AGC_GAIN};
         frequency_deadband 0.0036 Hz;
         control_flags DROOP|AGC;
         object recorder {
@@ -534,7 +555,7 @@ object controlarea:87 {
         actual 4607.98 MW;
         inertia 46079.8 MJ;
         schedule 4607.98 MW;
-        control_gain 0.5;
+        control_gain ${AGC_GAIN};
         frequency_deadband 0.00327273 Hz;
         control_flags DROOP|AGC;
         object recorder {
@@ -581,7 +602,7 @@ object controlarea:89 {
         actual 313.681 MW;
         inertia 3136.81 MJ;
         schedule 313.681 MW;
-        control_gain 0.5;
+        control_gain ${AGC_GAIN};
         frequency_deadband 0.003 Hz;
         control_flags DROOP|AGC;
         object recorder {
@@ -628,7 +649,7 @@ object controlarea:90 {
         actual 1829.17 MW;
         inertia 18291.7 MJ;
         schedule 1829.17 MW;
-        control_gain 0.5;
+        control_gain ${AGC_GAIN};
         frequency_deadband 0.00276923 Hz;
         control_flags DROOP|AGC;
         object recorder {
@@ -675,7 +696,7 @@ object controlarea:91 {
         actual 725.447 MW;
         inertia 7254.47 MJ;
         schedule 725.447 MW;
-        control_gain 0.5;
+        control_gain ${AGC_GAIN};
         frequency_deadband 0.00257143 Hz;
         control_flags DROOP|AGC;
         object recorder {
@@ -722,7 +743,7 @@ object controlarea:96 {
         actual 935.032 MW;
         inertia 9350.32 MJ;
         schedule 935.032 MW;
-        control_gain 0.5;
+        control_gain ${AGC_GAIN};
         frequency_deadband 0.0024 Hz;
         control_flags DROOP|AGC;
         object recorder {
@@ -769,7 +790,7 @@ object controlarea:97 {
         actual 405.436 MW;
         inertia 4054.36 MJ;
         schedule 405.436 MW;
-        control_gain 0.5;
+        control_gain ${AGC_GAIN};
         frequency_deadband 0.00225 Hz;
         control_flags DROOP|AGC;
         object recorder {
@@ -816,7 +837,7 @@ object controlarea:98 {
         actual 1005.76 MW;
         inertia 10057.6 MJ;
         schedule 1005.76 MW;
-        control_gain 0.5;
+        control_gain ${AGC_GAIN};
         frequency_deadband 0.00211765 Hz;
         control_flags DROOP|AGC;
         object recorder {
@@ -863,7 +884,7 @@ object controlarea:99 {
         actual 2081.69 MW;
         inertia 20816.9 MJ;
         schedule 2081.69 MW;
-        control_gain 0.5;
+        control_gain ${AGC_GAIN};
         frequency_deadband 0.002 Hz;
         control_flags DROOP|AGC;
         object recorder {
@@ -910,7 +931,7 @@ object controlarea:100 {
         actual 5879.21 MW;
         inertia 58792.1 MJ;
         schedule 5879.21 MW;
-        control_gain 0.5;
+        control_gain ${AGC_GAIN};
         frequency_deadband 0.00189474 Hz;
         control_flags DROOP|AGC;
         object recorder {
@@ -957,7 +978,7 @@ object controlarea:101 {
         actual 5927.72 MW;
         inertia 59277.2 MJ;
         schedule 5927.72 MW;
-        control_gain 0.5;
+        control_gain ${AGC_GAIN};
         frequency_deadband 0.0018 Hz;
         control_flags DROOP|AGC;
         object recorder {
@@ -1004,7 +1025,7 @@ object controlarea:102 {
         actual 1523.28 MW;
         inertia 15232.8 MJ;
         schedule 1523.28 MW;
-        control_gain 0.5;
+        control_gain ${AGC_GAIN};
         frequency_deadband 0.00171429 Hz;
         control_flags DROOP|AGC;
         object recorder {
@@ -1051,7 +1072,7 @@ object controlarea:103 {
         actual 3705.5 MW;
         inertia 37055 MJ;
         schedule 3705.5 MW;
-        control_gain 0.5;
+        control_gain ${AGC_GAIN};
         frequency_deadband 0.00163636 Hz;
         control_flags DROOP|AGC;
         object recorder {
@@ -1098,7 +1119,7 @@ object controlarea:104 {
         actual 673.786 MW;
         inertia 6737.86 MJ;
         schedule 673.786 MW;
-        control_gain 0.5;
+        control_gain ${AGC_GAIN};
         frequency_deadband 0.00156522 Hz;
         control_flags DROOP|AGC;
         object recorder {
@@ -1145,7 +1166,7 @@ object controlarea:105 {
         actual 6010.71 MW;
         inertia 60107.1 MJ;
         schedule 6010.71 MW;
-        control_gain 0.5;
+        control_gain ${AGC_GAIN};
         frequency_deadband 0.0015 Hz;
         control_flags DROOP|AGC;
         object recorder {
@@ -1192,7 +1213,7 @@ object controlarea:106 {
         actual 942.48 MW;
         inertia 9424.8 MJ;
         schedule 942.48 MW;
-        control_gain 0.5;
+        control_gain ${AGC_GAIN};
         frequency_deadband 0.00144 Hz;
         control_flags DROOP|AGC;
         object recorder {
@@ -1239,7 +1260,7 @@ object controlarea:107 {
         actual 3784.63 MW;
         inertia 37846.3 MJ;
         schedule 3784.63 MW;
-        control_gain 0.5;
+        control_gain ${AGC_GAIN};
         frequency_deadband 0.00138462 Hz;
         control_flags DROOP|AGC;
         object recorder {
@@ -1286,7 +1307,7 @@ object controlarea:108 {
         actual 2405.23 MW;
         inertia 24052.3 MJ;
         schedule 2405.23 MW;
-        control_gain 0.5;
+        control_gain ${AGC_GAIN};
         frequency_deadband 0.00133333 Hz;
         control_flags DROOP|AGC;
         object recorder {
@@ -1333,7 +1354,7 @@ object controlarea:109 {
         actual 7043.51 MW;
         inertia 70435.1 MJ;
         schedule 7043.51 MW;
-        control_gain 0.5;
+        control_gain ${AGC_GAIN};
         frequency_deadband 0.00128571 Hz;
         control_flags DROOP|AGC;
         object recorder {
@@ -1380,7 +1401,7 @@ object controlarea:110 {
         actual 3182.94 MW;
         inertia 31829.4 MJ;
         schedule 3182.94 MW;
-        control_gain 0.5;
+        control_gain ${AGC_GAIN};
         frequency_deadband 0.00124138 Hz;
         control_flags DROOP|AGC;
         object recorder {
@@ -1427,7 +1448,7 @@ object controlarea:111 {
         actual 1302.25 MW;
         inertia 13022.5 MJ;
         schedule 1302.25 MW;
-        control_gain 0.5;
+        control_gain ${AGC_GAIN};
         frequency_deadband 0.0012 Hz;
         control_flags DROOP|AGC;
         object recorder {
@@ -1474,7 +1495,7 @@ object controlarea:112 {
         actual 2068.96 MW;
         inertia 20689.6 MJ;
         schedule 2068.96 MW;
-        control_gain 0.5;
+        control_gain ${AGC_GAIN};
         frequency_deadband 0.00116129 Hz;
         control_flags DROOP|AGC;
         object recorder {
@@ -1521,7 +1542,7 @@ object controlarea:113 {
         actual 8056.46 MW;
         inertia 80564.6 MJ;
         schedule 8056.46 MW;
-        control_gain 0.5;
+        control_gain ${AGC_GAIN};
         frequency_deadband 0.001125 Hz;
         control_flags DROOP|AGC;
         object recorder {
@@ -1568,7 +1589,7 @@ object controlarea:114 {
         actual 2459.01 MW;
         inertia 24590.1 MJ;
         schedule 2459.01 MW;
-        control_gain 0.5;
+        control_gain ${AGC_GAIN};
         frequency_deadband 0.00109091 Hz;
         control_flags DROOP|AGC;
         object recorder {
@@ -1615,7 +1636,7 @@ object controlarea:115 {
         actual 646.677 MW;
         inertia 6466.77 MJ;
         schedule 646.677 MW;
-        control_gain 0.5;
+        control_gain ${AGC_GAIN};
         frequency_deadband 0.00105882 Hz;
         control_flags DROOP|AGC;
         object recorder {
@@ -1662,7 +1683,7 @@ object controlarea:116 {
         actual 748.887 MW;
         inertia 7488.87 MJ;
         schedule 748.887 MW;
-        control_gain 0.5;
+        control_gain ${AGC_GAIN};
         frequency_deadband 0.00102857 Hz;
         control_flags DROOP|AGC;
         object recorder {
@@ -1709,7 +1730,7 @@ object controlarea:117 {
         actual 453.724 MW;
         inertia 4537.24 MJ;
         schedule 453.724 MW;
-        control_gain 0.5;
+        control_gain ${AGC_GAIN};
         frequency_deadband 0.001 Hz;
         control_flags DROOP|AGC;
         object recorder {
@@ -1756,7 +1777,7 @@ object controlarea:118 {
         actual 3804.59 MW;
         inertia 38045.9 MJ;
         schedule 3804.59 MW;
-        control_gain 0.5;
+        control_gain ${AGC_GAIN};
         frequency_deadband 0.000972973 Hz;
         control_flags DROOP|AGC;
         object recorder {
@@ -1803,7 +1824,7 @@ object controlarea:120 {
         actual 98.1885 MW;
         inertia 981.885 MJ;
         schedule 98.1885 MW;
-        control_gain 0.5;
+        control_gain ${AGC_GAIN};
         frequency_deadband 0.000947368 Hz;
         control_flags DROOP|AGC;
         object recorder {
@@ -1850,7 +1871,7 @@ object controlarea:122 {
         actual 7841.75 MW;
         inertia 78417.5 MJ;
         schedule 7841.75 MW;
-        control_gain 0.5;
+        control_gain ${AGC_GAIN};
         frequency_deadband 0.000923077 Hz;
         control_flags DROOP|AGC;
         object recorder {
@@ -1897,7 +1918,7 @@ object controlarea:123 {
         actual 120.974 MW;
         inertia 1209.74 MJ;
         schedule 120.974 MW;
-        control_gain 0.5;
+        control_gain ${AGC_GAIN};
         frequency_deadband 0.0009 Hz;
         control_flags DROOP|AGC;
         object recorder {
@@ -1942,7 +1963,7 @@ object controlarea:124 {
         actual 0 MW;
         inertia 0 MJ;
         schedule 0 MW;
-        control_gain 0.5;
+        control_gain ${AGC_GAIN};
         frequency_deadband 0.000878049 Hz;
         control_flags DROOP|AGC;
         object recorder {
@@ -1987,7 +2008,7 @@ object controlarea:125 {
         actual 0 MW;
         inertia 0 MJ;
         schedule 0 MW;
-        control_gain 0.5;
+        control_gain ${AGC_GAIN};
         frequency_deadband 0.000857143 Hz;
         control_flags DROOP|AGC;
         object recorder {
@@ -2032,7 +2053,7 @@ object controlarea:126 {
         actual 0 MW;
         inertia 0 MJ;
         schedule 0 MW;
-        control_gain 0.5;
+        control_gain ${AGC_GAIN};
         frequency_deadband 0.000837209 Hz;
         control_flags DROOP|AGC;
         object recorder {

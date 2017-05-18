@@ -72,6 +72,7 @@ EXPORT CLASS *init(CALLBACKS *fntable, MODULE *module, int argc, char *argv[])
 			PT_KEYWORD,"INTERTIE",VO_INTERTIE,
 			PT_KEYWORD,"GENERATOR",VO_GENERATOR,
 			PT_KEYWORD,"LOAD",VO_LOAD,
+			PT_KEYWORD,"SCHEDULER",VO_SCHEDULER,
 			PT_KEYWORD,"ALL",VO_ALL,
 		NULL);
 	gl_global_create("interconnection::allow_constraint_violations",
@@ -85,10 +86,10 @@ EXPORT CLASS *init(CALLBACKS *fntable, MODULE *module, int argc, char *argv[])
 			PT_KEYWORD,"LOAD",CV_LOAD,
 			PT_KEYWORD,"ALL",CV_ALL,
 		NULL);
-	gl_global_create("interconnection::schedule_interval",
-		PT_double,PA_PUBLIC,PT_UNITS,"s",NULL);
-	gl_global_create("interconnection::dispatch_ramptime",
-		PT_double,PA_PUBLIC,PT_UNITS,"s",NULL);
+	gl_global_create("interconnection::schedule_interval[s]",
+		PT_double,&schedule_interval,NULL);
+	gl_global_create("interconnection::dispatch_ramptime[s]",
+		PT_double,&dispatch_ramptime,NULL);
 
 	/* always return the first class registered */
 	return interconnection::oclass;

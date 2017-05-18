@@ -26,10 +26,12 @@ public:
 	GL_ATOMIC(double,schedule); ///< scheduled generator power
 	GL_ATOMIC(double,actual); ///< actual generator power
 	GL_ATOMIC(enumeration,status); /// generation status flags (GS_*)
+	GL_ATOMIC(double,fixed_price); ///< scheduling base price
+	GL_ATOMIC(double,marginal_price); ///< scheduling marginal price
 	GL_ATOMIC(double,max_ramp); ///< maximum ramp up capability
 	GL_ATOMIC(double,min_ramp); ///< maximum ramp dn capability
-	GL_ATOMIC(double,min_output);
-	GL_ATOMIC(double,max_output);
+	GL_ATOMIC(double,min_output); ///< minimum output
+	GL_ATOMIC(double,max_output); ///< maximum output
 	GL_ATOMIC(double,control_gain); ///< generator control gain
 	GL_ATOMIC(set,control_flags); ///< generation control flags (GCF_*)
 	GL_ATOMIC(double,frequency_deadband); ///< frequency control deadband
