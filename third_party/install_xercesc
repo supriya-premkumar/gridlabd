@@ -19,8 +19,8 @@ elif [ "$(uname)" == "Linux" ]; then
 	make
 	cd ../..
 	sudo cp -r include/xercesc /usr/include
-	chmod -R a+rx /usr/include/xercesc
+	sudo chmod -R a+rx /usr/include/xercesc
 	sudo cp -f lib/* /usr/lib
-	chmod -R a+rx /usr/lib/*xerces*
+	sudo chmod -R a+rx /usr/lib/*xerces*
 	sudo /sbin/ldconfig
 fi
